@@ -1,0 +1,15 @@
+meta {
+  name: read_books_query_param
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseURL}}/books?year=1999
+  body: none
+  auth: inherit
+}
+
+params:query {
+  year: 1999
+}

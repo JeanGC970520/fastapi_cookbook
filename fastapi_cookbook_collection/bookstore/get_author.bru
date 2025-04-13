@@ -1,0 +1,15 @@
+meta {
+  name: get_author
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseURL}}/authors/:author_id
+  body: none
+  auth: inherit
+}
+
+params:path {
+  author_id: 100
+}
