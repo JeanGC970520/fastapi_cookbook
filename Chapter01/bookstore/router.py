@@ -1,3 +1,5 @@
+from models import Book, BookResponse
+
 from fastapi import APIRouter
 
 router = APIRouter()
@@ -17,3 +19,22 @@ async def read_books(year: int = None):
             "books" : ["Book 1", "Book 2"] 
         }
     return {"books": ["All books"]}
+
+@router.post("/book")
+async def create_book(book: Book):
+    return book
+
+@router.get("/allbooks")
+async def read_all_books() -> list[BookResponse]:
+    return [
+        {
+            "id" : 1,
+            "title" : "1984",
+            "author" : "George Orwell",
+        },
+        {
+            "id" : 1,
+            "title" : "The Great Gatsby",
+            "author" : "F. Scott Fitzgerald",
+        },
+    ]
