@@ -1,0 +1,11 @@
+meta {
+  name: raise_exception
+  type: http
+  seq: 5
+}
+
+get {
+  url: {{baseURL}}/error_endpoint
+  body: none
+  auth: inherit
+}
