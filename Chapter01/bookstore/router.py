@@ -1,6 +1,6 @@
 from models import Book, BookResponse
 
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 
 router = APIRouter()
 
@@ -38,3 +38,7 @@ async def read_all_books() -> list[BookResponse]:
             "author" : "F. Scott Fitzgerald",
         },
     ]
+
+@router.get("/error_endpoint")
+async def raise_exception():
+    raise HTTPException(status_code=400)

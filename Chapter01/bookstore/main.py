@@ -1,6 +1,7 @@
 import router
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from starlette.responses import JSONResponse
 
 app = FastAPI()
 
@@ -14,6 +15,14 @@ async def read_book(book_id: int):
         "author": "F. Scott Fitzgerald",
     }
 
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request, exc):
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={
+            "message" : "Oops! Something went wrong"
+        }
+    )
 
 # @app.get("/authors/{author_id}")
 # async def read_author(author_id: int):
