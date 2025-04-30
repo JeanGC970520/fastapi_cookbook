@@ -25,3 +25,7 @@ class User(Base):
     )
     name: Mapped[str]
     email: Mapped[str]
+
+
+# Create tables on DB
+Base.metadata.create_all(bind=engine)
