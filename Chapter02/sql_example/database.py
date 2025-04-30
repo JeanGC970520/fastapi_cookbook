@@ -3,7 +3,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import (
     Mapped,
     mapped_column,
-    DeclarativeBase
+    DeclarativeBase,
+    sessionmaker
 )
 
 # Connection string for SQLite DB
@@ -29,3 +30,8 @@ class User(Base):
 
 # Create tables on DB
 Base.metadata.create_all(bind=engine)
+
+# Manage Sessions -> a Session represents a workspace for objects, a place where we can interact with the data
+SessionLocal = sessionmaker(
+    autocommit=False, autoflush=False, bind=engine
+)
