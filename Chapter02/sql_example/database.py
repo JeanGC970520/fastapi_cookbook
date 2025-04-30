@@ -1,9 +1,16 @@
+from sqlalchemy import create_engine
+
 from sqlalchemy.orm import (
     Mapped,
     mapped_column,
     DeclarativeBase
 )
 
+# Connection string for SQLite DB
+DATABASE_URL = "sqlite:///./test.db" 
+
+# Represents the core interface to the database
+engine = create_engine(DATABASE_URL)
 
 class Base(DeclarativeBase):
     """
