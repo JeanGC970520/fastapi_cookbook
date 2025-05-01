@@ -98,6 +98,11 @@ def update_user(
 def delete_user(
     user_id: int, db: Session = Depends(get_db)
 ):
+    """
+        Method to delete a single user with User ID, user QUERY params
+        Requiere:
+            user_id -> Like QUERY param
+    """
     db_user = (
         db.query(User).filter(
             User.id == user_id
