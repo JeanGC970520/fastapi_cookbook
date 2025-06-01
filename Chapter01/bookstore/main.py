@@ -1,4 +1,4 @@
-import router
+from .router import router
 
 import json
 
@@ -9,7 +9,7 @@ from starlette.responses import JSONResponse
 
 app = FastAPI()
 
-app.include_router(router.router)
+app.include_router(router)
 
 @app.get("/books/{book_id}")
 async def read_book(book_id: int):
