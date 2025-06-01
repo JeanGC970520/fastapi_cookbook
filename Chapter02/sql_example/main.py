@@ -2,7 +2,7 @@ from pydantic import BaseModel
 from fastapi import Depends, FastAPI, HTTPException
 
 from sqlalchemy.orm import Session
-from database import SessionLocal, User
+from .database import SessionLocal, User
 
 def get_db():
     db = SessionLocal()
@@ -25,6 +25,7 @@ def read_users(db: Session = Depends(get_db)):
     users = db.query(User).all()
     return users
 
+# Create
 @app.post("/user")
 def add_new_user(
     user: UserBody,
@@ -44,6 +45,7 @@ def add_new_user(
     db.refresh(new_user)
     return new_user
 
+# Read
 @app.get("/user")
 def get_user(
     user_id: int,
@@ -66,6 +68,7 @@ def get_user(
         )
     return user
 
+# Update
 @app.post("/user/{user_id}") # PATH parameters
 def update_user(
     user_id: int,
@@ -94,6 +97,7 @@ def update_user(
     db.refresh(db_user)
     return db_user
 
+# Delete
 @app.delete("/user")
 def delete_user(
     user_id: int, db: Session = Depends(get_db)
