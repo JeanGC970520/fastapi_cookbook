@@ -1,0 +1,15 @@
+meta {
+  name: get_user
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{baseURL}}/user?user_id=683cddd8c555429ca2a54169
+  body: none
+  auth: inherit
+}
+
+params:query {
+  user_id: 683cddd8c555429ca2a54169
+}
