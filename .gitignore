@@ -1,2 +1,9 @@
+# Python files
 __*__
+
+# Enviroment
+.env
 *env*
+
+# Database
+*.db
