@@ -73,3 +73,12 @@ def get_user(user_id: str) -> UserResponse:
         )
     db_user["id"] = str(db_user["_id"])
     return db_user
+
+
+# Endpoint to delete all documents in the collection
+@app.delete("/users")
+def delete_users():
+    result = user_collection.delete_many({})
+    return {
+        "users_deleted": result.deleted_count,
+    }
