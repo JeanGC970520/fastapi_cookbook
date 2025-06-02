@@ -6,6 +6,14 @@ meta {
 
 post {
   url: {{baseURL}}/uploadfile
-  body: none
+  body: multipartForm
   auth: inherit
+}
+
+headers {
+  Content-Type: multipart/form-data
+}
+
+body:multipart-form {
+  file: @file(/Users/jean.garcia/Documents/JP/follow_branchs.sh)
 }

@@ -1,0 +1,15 @@
+meta {
+  name: download_file
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseURL}}/downloadfile/:filename
+  body: none
+  auth: inherit
+}
+
+params:path {
+  filename: follow_branch.sh
+}
