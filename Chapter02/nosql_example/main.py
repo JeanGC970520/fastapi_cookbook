@@ -2,7 +2,8 @@ from .logging import logger
 from .database import user_collection
 
 from bson import ObjectId
-from pydantic import BaseModel
+from typing import Optional
+from pydantic import BaseModel, EmailStr
 from fastapi import FastAPI, HTTPException
 
 app = FastAPI()
@@ -10,7 +11,7 @@ app = FastAPI()
 
 class User(BaseModel):
     name: str
-    email: str
+    email: EmailStr
 
 
 class UserResponse(User):
@@ -53,8 +54,5 @@ def get_user(user_id: str) -> UserResponse:
             status_code=404,
             detail="User not found",
         )
-    user_response = UserResponse(
-        id=str(db_user["_id"]),
-        **db_user,
-    )
-    return user_response
+    db_user["id"] = str(db_user["_id"])
+    return db_user
