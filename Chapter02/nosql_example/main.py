@@ -3,15 +3,32 @@ from .database import user_collection
 
 from bson import ObjectId
 from typing import Optional
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, field_validator
 from fastapi import FastAPI, HTTPException
 
 app = FastAPI()
 
 
+# Manage complex data types
+class Tweet(BaseModel):
+    content: str
+    hashtags: list[str]
+
+
 class User(BaseModel):
     name: str
     email: EmailStr
+    age: int
+    tweets: list[Tweet] | None = None
+
+    # Add Custom Validator
+    @field_validator("age")
+    def validate_age(cls, value):
+        if value < 18 or value > 100:
+            raise ValueError(
+                "Age must be between 18 and 100",
+            )
+        return value
 
 
 class UserResponse(User):
