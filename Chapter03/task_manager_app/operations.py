@@ -4,7 +4,7 @@ from typing import Optional
 
 from .models import Task, TaskWithID
 
-DATABASE_FILENAME = os.path.join(os.path.dirname(__file__), "task.csv")
+DATABASE_FILENAME = os.path.join(os.path.dirname(__file__), "tasks.csv")
 
 columns_fields = [
     "id", "title", "description", "status",
@@ -35,7 +35,7 @@ def get_next_id():
         with open(DATABASE_FILENAME, "r") as csvfile:
             reader = csv.DictReader(csvfile)
             max_id = max(
-                int(row["id"] for row in reader),
+                int(row["id"]) for row in reader
             )
             return max_id + 1
     except (FileNotFoundError, ValueError):
@@ -74,9 +74,10 @@ def modify_task(
     tasks = read_all_task()
     for number, task_ in enumerate(tasks):
         if task_.id == id:
+            #! Multiple assignament
             tasks[number] = (
                 updated_task
-            ) = task_.model_copy(update=task) #! Multiple assignament
+            ) = task_.model_copy(update=task) # update param changes only the fields that asign it
     with open(
         DATABASE_FILENAME, mode="w", newline="",
     ) as csvfile: # rewrite the file
@@ -95,7 +96,7 @@ def modify_task(
 # Process to remove a Task
 
 def remove_task(id: int) -> Optional[Task]:
-    deleted_task : Optional[Task] = None
+    deleted_task : Optional[TaskWithID] = None
     tasks = read_all_task()
     with open(
         DATABASE_FILENAME, mode="w", newline="",
@@ -112,7 +113,7 @@ def remove_task(id: int) -> Optional[Task]:
             writer.writerow(task.model_dump())
     if deleted_task:
         dict_task_without_id = (
-            deleted_task.model_dump(),
+            deleted_task.model_dump()
         )
         del dict_task_without_id["id"]
         return Task(**dict_task_without_id)
