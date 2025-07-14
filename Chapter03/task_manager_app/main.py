@@ -1,11 +1,11 @@
 from fastapi import FastAPI, HTTPException
 
-from .models import (
+from models import (
     Task,
     TaskWithID,
     UpdateTask,
 )
-from .operations import (
+from operations import (
     read_all_task, 
     read_task,
     create_task,

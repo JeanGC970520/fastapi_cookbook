@@ -2,7 +2,7 @@ import os
 import csv
 from typing import Optional
 
-from .models import Task, TaskWithID
+from models import Task, TaskWithID
 
 DATABASE_FILENAME = os.path.join(os.path.dirname(__file__), "tasks.csv")
 
