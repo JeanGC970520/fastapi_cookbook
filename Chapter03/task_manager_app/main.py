@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import FastAPI, HTTPException
 
 from models import (
@@ -6,7 +7,7 @@ from models import (
     UpdateTask,
 )
 from operations import (
-    read_all_task, 
+    read_all_task,
     read_task,
     create_task,
     modify_task,
@@ -15,11 +16,38 @@ from operations import (
 
 app = FastAPI()
 
+
 # Read operations
 @app.get("/tasks", response_model=list[TaskWithID])
-def get_tasks():
+def get_tasks(
+    status: Optional[str] = None,
+    title: Optional[str] = None,
+):
     tasks = read_all_task()
+    if status:
+        tasks = [
+            task
+            for task in tasks
+            if task.status == status
+        ]
+    if title:
+        tasks = [
+            task for task in tasks if task.title == title
+        ]
     return tasks
+
+
+@app.get("/tasks/search")
+def search_tasks(keyword: str):
+    tasks = read_all_task()
+    filtered_tasks = [
+        task
+        for task in tasks
+        if keyword.lower()
+        in (task.title + task.description).lower()
+    ]
+    return filtered_tasks
+
 
 @app.get("/task/{task_id}")
 def get_task(task_id: int):
@@ -30,10 +58,12 @@ def get_task(task_id: int):
         )
     return task
 
+
 # Create operation
 @app.post("/task", response_model=TaskWithID)
 def add_task(task: Task):
     return create_task(task)
+
 
 # Update operation
 @app.put("/task/{task_id}", response_model=TaskWithID)
@@ -49,6 +79,7 @@ def update_task(
             status_code=404, detail="task not found",
         )
     return modified
+
 
 # Delete operation
 @app.delete("/task/{task_id}", response_model=Task)
