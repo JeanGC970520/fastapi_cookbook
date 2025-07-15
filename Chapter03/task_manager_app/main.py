@@ -5,9 +5,11 @@ from models import (
     Task,
     TaskWithID,
     UpdateTask,
+    TaskV2WithID,
 )
 from operations import (
     read_all_task,
+    read_all_task_v2,
     read_task,
     create_task,
     modify_task,
@@ -34,6 +36,12 @@ def get_tasks(
         tasks = [
             task for task in tasks if task.title == title
         ]
+    return tasks
+
+
+@app.get("/v2/tasks", response_model=list[TaskV2WithID])
+def get_tasks_v2():
+    tasks = read_all_task_v2()
     return tasks
 
 
