@@ -19,8 +19,9 @@ def read_all_task() -> list[TaskWithID]:
             csvfile
         )
         return [TaskWithID(**row) for row in reader]
-    
 
+
+# v2 to provide new features
 def read_all_task_v2() -> list[TaskV2WithID]:
     with open(DATABASE_FILENAME) as csvfile:
         reader = csv.DictReader(
