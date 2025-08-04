@@ -1,6 +1,7 @@
 from typing import Optional
 from fastapi import FastAPI, HTTPException, Depends
 from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.openapi.utils import get_openapi
 
 from models import (
     Task,
@@ -25,7 +26,28 @@ from security import (
     User,
 )
 
-app = FastAPI()
+# hidden endpoints
+def custom_openapi():
+    if app.openapi_schema:
+        return app.openapi_schema
+    openapi_schema = get_openapi(
+        title="Customized Title",
+        version="2.0.0",
+        description="This is a custom OpenAPI schema",
+        routes=app.routes,
+    )
+    del openapi_schema["paths"]["/token"]
+    app.openapi_schema = openapi_schema
+    return app.openapi_schema
+
+
+app = FastAPI(
+    title="Task Manager API",
+    description="This is a task management API",
+    version="0.1.0",
+)
+
+app.openapi = custom_openapi
 
 
 # login with OAuth2
