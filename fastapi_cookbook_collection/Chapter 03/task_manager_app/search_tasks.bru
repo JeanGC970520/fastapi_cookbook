@@ -1,0 +1,15 @@
+meta {
+  name: search_tasks
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseURL}}/tasks/search?keyword=task
+  body: none
+  auth: inherit
+}
+
+params:query {
+  keyword: task
+}

@@ -1,0 +1,16 @@
+meta {
+  name: get_tasks
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{baseURL}}/tasks?title=Task Two
+  body: none
+  auth: inherit
+}
+
+params:query {
+  title: Task Two
+  ~status: In progress
+}
