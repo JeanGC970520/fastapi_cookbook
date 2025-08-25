@@ -11,6 +11,7 @@ from fastapi import (
 )
 from fastapi.security import (
     OAuth2PasswordRequestForm,
+    OAuth2PasswordBearer
 )
 from pydantic import BaseModel
 
@@ -148,4 +149,49 @@ def get_user_access_token(
     return {
         "access_token": access_token,
         "token_type": "bearer",
+    }
+
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+
+@router.get(
+    "/users/me",
+    responses={
+        status.HTTP_401_UNAUTHORIZED: {
+            "description": "User not authorized"
+        },
+        status.HTTP_200_OK: {
+            "description": "username authorized"
+        },
+    },
+)
+def read_user_me(
+    token: str = Depends(oauth2_scheme),
+    session: Session = Depends(get_session),
+):
+    """Valid if the token corresponds with a User
+
+    Args:
+        token (str, optional):
+            JWT User token. Defaults to Depends(oauth2_scheme).
+        session (Session, optional):
+            Session to connect with User table.
+            Defaults to Depends(get_session).
+
+    Raises:
+        HTTPException: 401 UNAUTHORIZED error
+        if user doesn't exists
+
+    Returns:
+        dict: Authorized information
+    """
+    user = decode_access_token(token, session)
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="User not authorized",
+        )
+    return {
+        "description": f"{user.username} authorized"
     }
