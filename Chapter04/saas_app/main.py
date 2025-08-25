@@ -13,6 +13,7 @@ from models import Base
 from db_connection import get_session
 from operations import add_user
 from responses import ResponseCreateUser, UserCreateBody, UserCreateResponse
+import security
 
 
 # Lifespan defines the actions to execute before the app starts up.
@@ -27,6 +28,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="SaaS aplication", lifespan=lifespan
 )
+app.include_router(security.router)
 
 
 @app.post(
