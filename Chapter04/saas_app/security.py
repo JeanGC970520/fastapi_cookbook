@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 from sqlalchemy.orm import Session
 from models import User
@@ -60,7 +60,8 @@ def create_access_token(data: dict) -> str:
         str: JWT token generated
     """
     to_encode = data.copy()
-    expire = datetime.now() + timedelta(
+    # TODO: verify how to configure JWT encode to user different timezone
+    expire = datetime.now(timezone.utc) + timedelta(
         minutes=ACCESS_TOKEN_EXPIRE_MINUTES,
     )
     to_encode.update({"exp": expire})
