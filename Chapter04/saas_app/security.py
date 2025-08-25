@@ -3,8 +3,19 @@ from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
 from models import User
 from jose import jwt, JWTError
+from fastapi import (
+    APIRouter,
+    Depends,
+    HTTPException,
+    status,
+)
+from fastapi.security import (
+    OAuth2PasswordRequestForm,
+)
+from pydantic import BaseModel
 
 from operations import pwd_context, get_user
+from db_connection import get_session
 
 
 def authenticate_user(
@@ -42,7 +53,7 @@ def create_access_token(data: dict) -> str:
     """Generates JWT access token
 
     Args:
-        data (dict): _description_
+        data (dict): Username information
 
     Returns:
         str: JWT token generated
@@ -81,3 +92,60 @@ def decode_access_token(
         return
     user = get_user(session, username)
     return user
+
+
+router = APIRouter()
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
+@router.post(
+    "/token",
+    response_model=Token,
+    responses={
+        status.HTTP_401_UNAUTHORIZED: {
+            "description": "Incorrect username or password"
+        }
+    },
+)
+def get_user_access_token(
+    form_data: OAuth2PasswordRequestForm = Depends(),
+    session: Session = Depends(get_session),
+):
+    """Endpoint to get JWT token bases in User credentials
+
+    Args:
+        form_data (OAuth2PasswordRequestForm, optional):
+            _description_.
+            Defaults to Depends().
+        session (Session, optional):
+            Session to interact with our User table.
+            Defaults to Depends(get_session).
+
+    Raises:
+        HTTPException: Return UNAUTHORIZED error if username or
+        password its invalid
+
+    Returns:
+        dict: Access token and its type(Bearer)
+    """
+    user = authenticate_user(
+        session,
+        form_data.username,
+        form_data.password
+    )
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Incorrect username or password",
+        )
+    access_token = create_access_token(
+        data={"sub": user.username}
+    )
+    return {
+        "access_token": access_token,
+        "token_type": "bearer",
+    }
