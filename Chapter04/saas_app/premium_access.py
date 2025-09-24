@@ -37,7 +37,7 @@ def register_premium_user(
 ):
     user = add_user(
         session=session,
-        *user.model_dump(),
+        **user.model_dump(),
         role=Role.premium,
     )
     if not user:
