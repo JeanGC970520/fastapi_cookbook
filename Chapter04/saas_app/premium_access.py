@@ -35,6 +35,20 @@ def register_premium_user(
     user: UserCreateBody,
     session: Session = Depends(get_session),
 ):
+    """Endpoint to register a new premium User
+
+    Args:
+        user (UserCreateBody): Model to manage a requiered fields about User
+        session (Session, optional): 
+            Session to interact with our User table. 
+            Defaults to Depends(get_session).
+
+    Raises:
+        HTTPException: Error if a user is not created
+
+    Returns:
+        dict: Successful response about User created
+    """
     user = add_user(
         session=session,
         **user.model_dump(),
