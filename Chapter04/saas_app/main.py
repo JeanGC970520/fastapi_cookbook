@@ -1,19 +1,17 @@
 from contextlib import (
     asynccontextmanager,
 )
-from fastapi import FastAPI
-from db_connection import get_engine
-
 from typing import Annotated
 
-from sqlalchemy.orm import Session
-from fastapi import Depends, HTTPException, status
-
+import premium_access
+import rbac
+import security
+from db_connection import get_engine, get_session
+from fastapi import Depends, FastAPI, HTTPException, status
 from models import Base
-from db_connection import get_session
 from operations import add_user
 from responses import ResponseCreateUser, UserCreateBody, UserCreateResponse
-import security
+from sqlalchemy.orm import Session
 
 
 # Lifespan defines the actions to execute before the app starts up.
@@ -29,6 +27,8 @@ app = FastAPI(
     title="SaaS aplication", lifespan=lifespan
 )
 app.include_router(security.router)
+app.include_router(premium_access.router)
+app.include_router(rbac.router)
 
 
 @app.post(
