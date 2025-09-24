@@ -10,7 +10,7 @@ from sqlalchemy.orm import (
 class Base(DeclarativeBase):
     pass
 
-
+# Enum to set User Role
 class Role(str, Enum):
     basic = "basic"
     premium = "premium"
